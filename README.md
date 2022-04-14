@@ -1,8 +1,9 @@
 # Processes-Scheduler
 
 Inputs : Type of scheduler + no of Processes + required information about each process according to the scheduler type.
-Note : Don't ask the user for unused info Example: If the user chose FCFS scheduler no need to ask him what is the priority numbers.
+
 Output: Time line showing the order and time taken by each process (Gantt Chart) + Average waiting time.
+
 Types of schedulers supported:
 1. FCFS
 2. SJF (Preemptive and Non Preemptive) 
