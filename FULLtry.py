@@ -788,6 +788,7 @@ class NONPSJF:
         start_time = []
         exit_time = []
         s_time = 0
+	sequence_of_process = []
         process_data.sort(key=lambda x: x[1])
         for i in range(len(process_data)):
             ready_queue = []
@@ -811,6 +812,7 @@ class NONPSJF:
                 s_time = s_time + ready_queue[0][2]
                 e_time = s_time
                 exit_time.append(e_time)
+		sequence_of_process.append(ready_queue[0][0])
                 for k in range(len(process_data)):
                     if process_data[k][0] == ready_queue[0][0]:
                         break
@@ -824,6 +826,7 @@ class NONPSJF:
                 s_time = s_time + normal_queue[0][2]
                 e_time = s_time
                 exit_time.append(e_time)
+		sequence_of_process.append(ready_queue[0][0])
                 for k in range(len(process_data)):
                     if process_data[k][0] == normal_queue[0][0]:
                         break
@@ -832,7 +835,7 @@ class NONPSJF:
         
         t_time = NONPSJF.calculateTurnaroundTime(self, process_data)
         w_time = NONPSJF.calculateWaitingTime(self, process_data)
-        NONPSJF.printData(self, process_data, t_time, w_time)
+        NONPSJF.printData(self, process_data, t_time, w_time, sequence_of_process)
         
     
     def calculateTurnaroundTime(self, process_data):
@@ -858,7 +861,7 @@ class NONPSJF:
         
         return average_waiting_time    
     
-    def printData(self, process_data, average_turnaround_time, average_waiting_time):
+    def printData(self, process_data, average_turnaround_time, average_waiting_time, sequence_of_process):
         waitsjfnon_label.config(text = 'average wait time is: '+ str(average_waiting_time), bg= '#772020',fg='white',font=('Arial', 14))
         waitsjfnon_label.grid(row=int(num0.get())+3,column=2,padx=10,pady=10)
 
