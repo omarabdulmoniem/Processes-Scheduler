@@ -529,171 +529,124 @@ def prioritynon_window():
 # SJF preemetive Algorithm
 
 
-class prenonsjf:
+class SJF:
 
-    def mainsjf(self):
-        num = int(num0.get())
-
-        #define processes list
-        proc = [[0]*3]*num
-
-        # define data dictionary
-        gData = {}
-
-        # ask user for input
-        y=int(0)
-        for i in info_list:
+    def processData(self, no_of_processes):
+      process_data = []
+      y =0
+      for i in info_list:
+            temp = []
+            processID = y
+            arrivalTime = int(i[1].get())
             
-            ID = 'P{y}'
-            arrival = int(i[1].get())
-            burst = int(i[0].get())
-
-            #store process data
-            proc[y][0]= arrival
-            proc[y][1]= burst
-            proc[y][2]= ID
-            # put data in dictionary
-            gData.update({proc[y][2]:[proc[y][0],proc[y][1]]})
-            y=y+1
-
-        #calling printData 
-        if clicked.get() == 'SJF (Preemptive)':
-            # calling sjf function, store return value (tt,wt,process line)
-            sjfScheduling,sjfLine = prenonsjf.sjf(gData)
-            prenonsjf.printData(gData,sjfScheduling,sjfLine,'Shortest Job First')
-        else:
-            # calling srtf function, store return value (tt,wt,process line)
-            srtfScheduling,srtfLine = prenonsjf.srtf(gData)
-            prenonsjf.printData(gData,srtfScheduling,srtfLine,'Shortest Remaning Time First')
-
-        # Shortest Job First
-    def sjf(dict):
-        begHold,endHold = 0,0
-        sjfdict,tempdict,sortdict,pLine ={},{},{},[]
-        for key,value in dict.items():
-            at,bt = value[0],value[1]
-            if (begHold == 0):
-                endHold += bt
-                sjfdict[key] = [begHold-at,bt-at]
-                pLine.append([key,endHold])
-                begHold = bt
-            else:
-                tempdict[key] = value[0],value[1]
-        for key,value in sorted(tempdict.items(), key = lambda x : x[1][1]):
-            sortdict[key] = value[0],value[1]
-        for key,value in sortdict.items():
-            at,bt = value[0],value[1]
-            if(begHold-at > 0):
-                endHold += bt
-                sjfdict[key] = [begHold-at,endHold-at]
-                pLine.append([key,endHold])
-                begHold += bt
-            else:
-                endHold += bt
-                sjfdict[key] = [0,bt]
-                pLine.append([key,endHold+1])
-                begHold += bt
-
-        return sjfdict,pLine
-
-    #Shortest Remaining Time First Function
-    def srtf(dict):
-        begHold,endHold = 0,0
-        srtfdict,tempdict,sortdict,pLine = {},{},{},[]
-        for key,value in dict.items():
-            at,bt = value[0],value[1]
-            
-            print(at,bt)
-            if (begHold == 0):
-                second = list(dict.values())[1]
-                srtfdict[key] = [begHold-at, bt-second[0]-at]
-                endHold += bt-second[0]
-                begHold = bt-second[0]
-                tempdict[key] = at, bt-begHold
-                pLine.append([key,endHold])
-            else:
-                tempdict[key] = at,bt
-        for key,value in reversed(sorted(tempdict.items(), key = lambda x : x[1][1],reverse=True)):
-            sortdict[key] = value[0],value[1]
-        for key,value in sortdict.items():
-            at,bt = value[0], value[1]
-            if key in srtfdict.keys():
-                hold = srtfdict[key]
-                endHold += bt
-                srtfdict[key] = [begHold-hold[1],endHold-at]
-                pLine.append([key,endHold])
-                begHold += bt
-            elif(begHold-at > 0):
-                endHold += bt
-                srtfdict[key] = [begHold-at,endHold-at]
-                pLine.append([key,endHold])
-                begHold += bt
-            else:
-                endHold += bt
-                srtfdict[key] = [0,bt]
-                pLine.append([key,endHold+1])
-                begHold += bt
-        return srtfdict, pLine
-
-    def printData(gData, cData, pLine, Name):
-        sumWT,sumTT =0,0
-        plinestr= "0 -> "
-        #print(Name.upper())
+            burstTime = int(i[0].get())
+            temp.extend([processID, arrivalTime, burstTime, 0, burstTime])
+            process_data.append(temp)
+            y+=1
+      SJF.schedule_process(self, process_data)
+      
+      
+    def schedule_process(self, process_data):
+        start_time = []
+        exit_time = []
+        s_time = 0
+        sequence_of_process = []
+        process_data.sort(key=lambda x: x[1])
         
-        # This block prints data in an organized shape
-        #print('| PROCESS | ARRIVAL | BURST | WAIT | TURNAROUND')
-        for key,value in sorted(cData.items()):
-            #print('{:>4}{:>10}{:>10}{:>10}'.format(key,gData[key][0],gData[key][1],value[0]))
-            
-            # This block prints data in order (use either blocks not both)
-            #process data
-            #print('Process ID:',key)
-            #print('Arrival time:',gData[key][0])
-            #print('Burst time:',gData[key][1])
-            #print('waiting time: ',value[0])
-            #print('Turnaround time: ',value[1])
-            
-            #sum of waiting time, turnaround time
-            sumWT += value[0]
-            sumTT += value[1]
-            
-            #average waiting time
-            avgwait= sumWT/len(cData)
+        while 1:
+            ready_queue = []
+            normal_queue = []
+            temp = []
+            for i in range(len(process_data)):
+                if process_data[i][1] <= s_time and process_data[i][3] == 0:
+                    temp.extend([process_data[i][0], process_data[i][1], process_data[i][2], process_data[i][4]])
+                    ready_queue.append(temp)
+                    temp = []
+                elif process_data[i][3] == 0:
+                    temp.extend([process_data[i][0], process_data[i][1], process_data[i][2], process_data[i][4]])
+                    normal_queue.append(temp)
+                    temp = []
+            if len(ready_queue) == 0 and len(normal_queue) == 0:
+                break
+            if len(ready_queue) != 0:
+                ready_queue.sort(key=lambda x: x[2])
+                
+                start_time.append(s_time)
+                s_time = s_time + 1
+                e_time = s_time
+                exit_time.append(e_time)
+                sequence_of_process.append(ready_queue[0][0])
+                for k in range(len(process_data)):
+                    if process_data[k][0] == ready_queue[0][0]:
+                        break
+                process_data[k][2] = process_data[k][2] - 1
+                if process_data[k][2] == 0:        #If Burst Time of a process is 0, it means the process is completed
+                    process_data[k][3] = 1
+                    process_data[k].append(e_time)
+            if len(ready_queue) == 0:
+                if s_time < normal_queue[0][1]:
+                    s_time = normal_queue[0][1]
+                start_time.append(s_time)
+                s_time = s_time + 1
+                e_time = s_time
+                exit_time.append(e_time)
+                sequence_of_process.append(normal_queue[0][0])
+                for k in range(len(process_data)):
+                    if process_data[k][0] == normal_queue[0][0]:
+                        break
+                    
+                process_data[k][2] = process_data[k][2] - 1
+                if process_data[k][2] == 0:        #If Burst Time of a process is 0, it means the process is completed
+                    process_data[k][3] = 1
+                    process_data[k].append(e_time)
+        t_time = SJF.calculateTurnaroundTime(self, process_data)
+        w_time = SJF.calculateWaitingTime(self, process_data)
+        SJF.printData(self, process_data, t_time, w_time, sequence_of_process)
         
-            #average turnaround time
-            avgturnaround=sumTT/len(cData)
         
-        waitsjf_label.config(text = 'average wait time is: '+ str(avgwait), bg= '#772020',fg='white',font=('Arial', 14))
+        
+    def calculateTurnaroundTime(self, process_data):
+        total_turnaround_time = 0
+        for i in range(len(process_data)):
+            turnaround_time = process_data[i][5] - process_data[i][1]
+            
+            total_turnaround_time = total_turnaround_time + turnaround_time
+            process_data[i].append(turnaround_time)
+        average_turnaround_time = total_turnaround_time / len(process_data)
+        
+        return average_turnaround_time
+
+
+    def calculateWaitingTime(self, process_data):
+        total_waiting_time = 0
+        for i in range(len(process_data)):
+            waiting_time = process_data[i][6] - process_data[i][4]
+            
+            total_waiting_time = total_waiting_time + waiting_time
+            process_data[i].append(waiting_time)
+        average_waiting_time = total_waiting_time / len(process_data)
+        
+        return average_waiting_time                
+                    
+    def printData(self, process_data, average_turnaround_time, average_waiting_time, sequence_of_process):
+        
+        waitsjf_label.config(text = 'average wait time is: '+ str(average_waiting_time), bg= '#772020',fg='white',font=('Arial', 14))
         waitsjf_label.grid(row=int(num0.get())+3,column=2,padx=10,pady=10)
 
-        turnsjf_label.config(text = 'average turn around time is: '+ str(avgturnaround), bg= '#772020',fg='white',font=('Arial', 14))
+        turnsjf_label.config(text = 'average turn around time is: '+ str(average_turnaround_time), bg= '#772020',fg='white',font=('Arial', 14))
         turnsjf_label.grid(row=int(num0.get())+4,column=2,padx=10,pady=10)
-
-
-        #print('Average Wait Time = ',avgwait)
-        #print('Average Turnaround Time = ',avgturnaround)
         
-        # Line similar to gantt chart
-        #for x in pLine:
-        #    plinestr += ('{} -> {} -> '.format(x[0],x[1]))
-        #print('{}\n'.format(plinestr[:-3]))
+        
+      
+      
+      
+      
+      
 
-        #prenonsjf.prlabel(avgwait,avgturnaround)
-    
-    #def prlabel(avwait,avturn):
-    #    waitsjf_label.config(text = 'av wait time is: '+ str(avwait), bg= '#772020',fg='white')
-    #    waitsjf_label.grid(row=int(num0.get())+3,column=2,padx=10,pady=10)
-    #
-    #    turnsjf_label.config(text = 'turn around time is: '+ str(avturn), bg= '#772020',fg='white')
-    #    turnsjf_label.grid(row=int(num0.get())+4,column=2,padx=10,pady=10)
-    
-
-
-
-
-def sjfprocess():
-    x = prenonsjf()
-    x.mainsjf()
+def psjf():
+    noOfProcesses = int(num0.get())
+    sjf = SJF()
+    sjf.processData(noOfProcesses)
 
 
 
@@ -726,7 +679,7 @@ def sjfpre_window():
         info_list[y].append(arrival)
 
 
-    process_button = Button(new,text="Process",padx=10,pady=10,fg='black',command= sjfprocess)
+    process_button = Button(new,text="Process",padx=10,pady=10,fg='black',command= psjf)
     process_button.grid(row=int(num0.get()),column=1)
 
     exit_button = Button(new,text="Exit",padx=10,pady=10,fg='red',command= new.quit)
