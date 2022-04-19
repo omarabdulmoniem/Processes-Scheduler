@@ -788,6 +788,7 @@ class NONPSJF:
         start_time = []
         exit_time = []
         s_time = 0
+	global sequence_of_process
 	sequence_of_process = []
         process_data.sort(key=lambda x: x[1])
         for i in range(len(process_data)):
