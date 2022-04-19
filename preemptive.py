@@ -12,9 +12,9 @@ class Priority_preemptive:
         for i in range(noOfProcesses):
             temp= []
             processID = int(input("Enter the process ID: "))
-            arrivalTime = int(input(f"Enter The Time of arrival for the process {processID}: "))
+            arrivalTime = float(input(f"Enter The Time of arrival for the process {processID}: "))
             priority = int(input("Enter the process priority: "))
-            burstTime = int(input(f"Enter the process Burst Time  {processID}: "))
+            burstTime = float(input(f"Enter the process Burst Time  {processID}: "))
             temp.extend([processID, arrivalTime, burstTime, priority, 0, burstTime])
             processData.append(temp)
         Priority_preemptive.schedule_process(self, processData)
