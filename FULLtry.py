@@ -636,12 +636,7 @@ class SJF:
         turnsjf_label.config(text = 'average turn around time is: '+ str(average_turnaround_time), bg= '#772020',fg='white',font=('Arial', 14))
         turnsjf_label.grid(row=int(num0.get())+4,column=2,padx=10,pady=10)
         
-        
-      
-      
-      
-      
-      
+            
 
 def psjf():
     noOfProcesses = int(num0.get())
@@ -696,8 +691,154 @@ def sjfpre_window():
 
 # SJF Non preemetive Algorithm
 
+
+
+class NONPSJF:
+    
+    def processData(self, no_of_processes):
+        process_data = []
+        for i in info_list:
+              temp = []
+              processID = 'P'+str(i)
+              arrivalTime = int(i[1].get())
+              
+              burstTime = int(i[0].get())
+              temp.extend([processID, arrivalTime, burstTime, 0, burstTime])
+              process_data.append(temp)
+        NONPSJF.schedulingProcess(self, process_data)
+        
+    def schedulingProcess(self, process_data):
+        start_time = []
+        exit_time = []
+        s_time = 0
+        process_data.sort(key=lambda x: x[1])
+        for i in range(len(process_data)):
+            ready_queue = []
+            temp = []
+            normal_queue = []
+            
+            for j in range(len(process_data)):
+                if (process_data[j][1] <= s_time) and (process_data[j][3] == 0):
+                    temp.extend([process_data[j][0], process_data[j][1], process_data[j][2]])
+                    ready_queue.append(temp)
+                    temp = []
+                elif process_data[j][3] == 0:
+                    temp.extend([process_data[j][0], process_data[j][1], process_data[j][2]])
+                    normal_queue.append(temp)
+                    temp = []
+                    
+            if len(ready_queue) != 0:
+                ready_queue.sort(key=lambda x: x[2])
+                
+                start_time.append(s_time)
+                s_time = s_time + ready_queue[0][2]
+                e_time = s_time
+                exit_time.append(e_time)
+                for k in range(len(process_data)):
+                    if process_data[k][0] == ready_queue[0][0]:
+                        break
+                process_data[k][3] = 1
+                process_data[k].append(e_time)
+                
+            elif len(ready_queue) == 0:
+                if s_time < normal_queue[0][1]:
+                    s_time = normal_queue[0][1]
+                start_time.append(s_time)
+                s_time = s_time + normal_queue[0][2]
+                e_time = s_time
+                exit_time.append(e_time)
+                for k in range(len(process_data)):
+                    if process_data[k][0] == normal_queue[0][0]:
+                        break
+                process_data[k][3] = 1
+                process_data[k].append(e_time)
+        
+        t_time = NONPSJF.calculateTurnaroundTime(self, process_data)
+        w_time = NONPSJF.calculateWaitingTime(self, process_data)
+        NONPSJF.printData(self, process_data, t_time, w_time)
+        
+    
+    def calculateTurnaroundTime(self, process_data):
+        total_turnaround_time = 0
+        for i in range(len(process_data)):
+            turnaround_time = process_data[i][4] - process_data[i][1]
+            
+            total_turnaround_time = total_turnaround_time + turnaround_time
+            process_data[i].append(turnaround_time)
+        average_turnaround_time = total_turnaround_time / len(process_data)
+        
+        return average_turnaround_time
+
+
+    def calculateWaitingTime(self, process_data):
+        total_waiting_time = 0
+        for i in range(len(process_data)):
+            waiting_time = process_data[i][5] - process_data[i][2]
+            
+            total_waiting_time = total_waiting_time + waiting_time
+            process_data[i].append(waiting_time)
+        average_waiting_time = total_waiting_time / len(process_data)
+        
+        return average_waiting_time    
+    
+    def printData(self, process_data, average_turnaround_time, average_waiting_time):
+        waitsjfnon_label.config(text = 'average wait time is: '+ str(average_waiting_time), bg= '#772020',fg='white',font=('Arial', 14))
+        waitsjfnon_label.grid(row=int(num0.get())+3,column=2,padx=10,pady=10)
+
+        turnsjfnon_label.config(text = 'average turn around time is: '+ str(average_turnaround_time), bg= '#772020',fg='white',font=('Arial', 14))
+        turnsjfnon_label.grid(row=int(num0.get())+4,column=2,padx=10,pady=10)
+        
+        
+def nonpsjf():
+    noOfProcesses = int(num0.get())
+    nonsjf = NONPSJF()
+    nonsjf.processData(noOfProcesses)
+
+
+
+
+
+
+
 def sjfnon_window():
-    sjfpre_window()
+    new = Toplevel()
+    new.title('sjf non preemative INFO')
+    new.geometry("1200x600")
+    new.config(bg= '#772020')
+
+    #processes info
+    global info_list
+    info_list = []
+    #vertical
+    for y in range(int(num0.get())):
+        info_list.append([])
+        burst_label  = Label(new,text = 'P'+ str(y+1) +' burst time: ', bg= '#772020',fg='white')
+        burst_label.grid(row=y,column=0)
+        global burst
+        burst = Entry(new,width=50,fg='black')
+        burst.grid(row=y,column=1,padx=10,pady=10)
+        info_list[y].append(burst)
+
+        arrival_label  = Label(new,text = 'Arrival Time: ', bg= '#772020',fg='white')
+        arrival_label.grid(row=y,column=2)
+        global arrival
+        arrival = Entry(new,width=50,fg='black')
+        arrival.grid(row=y,column=3,padx=10,pady=10)
+        info_list[y].append(arrival)
+
+
+    process_button = Button(new,text="Process",padx=10,pady=10,fg='black',command= nonpsjf)
+    process_button.grid(row=int(num0.get()),column=1)
+
+    exit_button = Button(new,text="Exit",padx=10,pady=10,fg='red',command= new.quit)
+    exit_button.grid(row=int(num0.get())+1,column=2,padx=10,pady=10)
+
+
+    global waitsjfnon_label
+    waitsjfnon_label = Label(new,text='')
+
+    global turnsjfnon_label
+    turnsjfnon_label = Label(new,text='')
 
 
     
