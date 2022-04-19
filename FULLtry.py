@@ -165,7 +165,7 @@ def fcfs_window():
 
 # Priority (preemative) Algorithm
 
-def pnongannt_chart():
+def pgannt_chart():
     # Declaring a figure "gnt"
     fig, gnt = plt.subplots()
     
@@ -195,28 +195,63 @@ def pnongannt_chart():
     gnt.grid(True)
     
     # Declaring a bar in schedule
-    wait_sum = 0
+    
+
+    #wait_sum = 0
+    #qua = int(quantumm.get())
+    #for i in range(int(num0.get())):
+    #    startlist = []
+    #    for j in range(len(executed_process)):
+    #        starttime=0
+    #       if int(executed_process[j])==i:
+    #            for z in range(j):
+    #                starttime += int(extime[z])
+    #            startlist.append((starttime,int(extime[j])))
+    #
+    #    gnt.broken_barh(startlist, (ticks[i]-5, 10),facecolors =(colors[i]))
+
 
     for i in range(int(num0.get())):
-        index = int(sq[i])-1
-        bur = burlist[index]
-        gnt.broken_barh([(wait_sum, bur)], (ticks[index]-5, 10),facecolors =(colors[i]))
-        wait_sum = wait_sum + bur
+        startlist = []
+        for j in range(len(pseq)):
+            starttime=0
+            duration = 0
+            z=j
+            while int(pseq[z]) == i:    
+                z+=1
+                if z == len(pseq):
+                    break
+
+            z-=1
+            if j == 0:
+                duration = int(eetime[z])
+            else:
+                duration = int(eetime[z])-int(eetime[j-1])
+
+            if int(pseq[j])==i:
+                starttime=int(eetime[j])-1
+                startlist.append((starttime,duration))
+
+        gnt.broken_barh(startlist, (ticks[i]-5, 10),facecolors =(colors[i]))
     
     plt.show()
+
+
 
 class Priority_preemptive:
 
     def process(self, noOfProcesses):
         processData = []
+        y =0
         for i in info_list:
             temp = []
-            processID = 'P'+str(i)
+            processID = y
             arrivalTime = int(i[1].get())
             priority = int(i[2].get())
             burstTime = int(i[0].get())
             temp.extend([processID, arrivalTime, burstTime, priority, 0, burstTime])
             processData.append(temp)
+            y+=1
 
         Priority_preemptive.schedule_process(self, processData)
         
@@ -278,9 +313,12 @@ class Priority_preemptive:
                     processData[k].append(eTime)            #give no 6 for the completion time
            
             
-
+        global eetime
+        eetime = exitTime
         waitingTime = Priority_preemptive.calculating_waiting_time(self, processData)
         turnAroundTime = Priority_preemptive.calculating_turn_around_time(self, processData)
+        global pseq
+        pseq = process_seq
         Priority_preemptive.print_data(self, processData,waitingTime,turnAroundTime,process_seq)
 
 
@@ -311,7 +349,7 @@ class Priority_preemptive:
 
         turn_label.config(text = 'average turn around time is: '+ str(av_turn_around_time), bg= '#772020',fg='white',font=('Arial', 14))
         turn_label.grid(row=int(num0.get())+4,column=2,padx=10,pady=10)
-        
+        pgannt_chart()
         
 
 
@@ -372,6 +410,45 @@ def prioritypre_window():
 
 # Priority (non Preemative)
 
+def pnongannt_chart():
+    # Declaring a figure "gnt"
+    fig, gnt = plt.subplots()
+    
+    # Setting Y-axis limits
+    gnt.set_ylim(0, 20+10*len(info_list))
+    
+    # Setting X-axis limits
+    gnt.set_xlim(0, 20+3*len(info_list))
+    
+    # Setting labels for x-axis and y-axis
+    gnt.set_xlabel('Seconds')
+    gnt.set_ylabel('Processes')
+    
+    # Setting ticks on y-axis
+    ticks = []
+    for i in range(int(num0.get())):
+        ticks.append(15+10*i)
+    gnt.set_yticks(ticks)
+
+    # Labelling tickes of y-axis
+    tick_labels = []
+    for i in range(int(num0.get())):
+        tick_labels.append('P'+str(i+1))
+    gnt.set_yticklabels(tick_labels)
+    
+    # Setting graph attribute
+    gnt.grid(True)
+    
+    # Declaring a bar in schedule
+    wait_sum = 0
+
+    for i in range(int(num0.get())):
+        index = int(sq[i])-1
+        bur = burlist[index]
+        gnt.broken_barh([(wait_sum, bur)], (ticks[index]-5, 10),facecolors =(colors[i]))
+        wait_sum = wait_sum + bur
+    
+    plt.show()
 
 class Priority_non_preemptive:
 
