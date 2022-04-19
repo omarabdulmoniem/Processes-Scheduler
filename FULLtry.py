@@ -763,12 +763,12 @@ class RoundRobin:
         exit_time = []
         
         
-        n = rrnumber
-        
+        n=int(num0.get())
+        y=0
         for i in info_list:
             
             temporary = []
-            process_id = 0
+            process_id = y
             
             
             arrival_time = float(i[1].get())
@@ -779,6 +779,7 @@ class RoundRobin:
             
             temporary.extend([process_id, arrival_time, burst_time, 0, burst_time])
             process_data.append(temporary)
+            y+=1
             
             
         quantum = int(quantumm.get())
@@ -901,7 +902,7 @@ class RoundRobin:
                     
             
         process_data.sort(key=lambda x: x[0])
-
+        
         RoundRobin.printrr(self,AvgT_time,AvgW_time)
 
 
@@ -933,13 +934,12 @@ class RoundRobin:
         
         return average_waiting_time
 
-    def printrr(self,AvgTurn_time,AvgWait_time):
-        waitrr_label.config(text = 'average wait time is: '+ str(AvgWait_time), bg= '#772020',fg='white',font=('Arial', 14))
-        waitrr_label.grid(row=int(num0.get())+5,column=2,padx=10,pady=10)
-    
-        turnrr_label.config(text = 'average turn around time is: '+ str(AvgTurn_time), bg= '#772020',fg='white',font=('Arial', 14))
-        turnrr_label.grid(row=int(num0.get())+6,column=2,padx=10,pady=10)
+    def printrr(self,turn_time,wait_time):
+            waitrr_label.config(text = 'average wait time is: '+ str(wait_time), bg= '#772020',fg='white',font=('Arial', 14))
+            waitrr_label.grid(row=int(num0.get())+4,column=2,padx=10,pady=10)
 
+            turnrr_label.config(text = 'average turn around time is: '+ str(turn_time), bg= '#772020',fg='white',font=('Arial', 14))
+            turnrr_label.grid(row=int(num0.get())+5,column=2,padx=10,pady=10)
 
 
 
