@@ -1,3 +1,4 @@
+# Shortest Job First
 def sjf(dict):
     begHold,endHold = 0,0
     sjfdict,tempdict,sortdict,pLine ={},{},{},[]
@@ -24,13 +25,17 @@ def sjf(dict):
             sjfdict[key] = [0,bt]
             pLine.append([key,endHold+1])
             begHold += bt
+
     return sjfdict,pLine
+
 #Shortest Remaining Time First Function
 def srtf(dict):
     begHold,endHold = 0,0
     srtfdict,tempdict,sortdict,pLine = {},{},{},[]
     for key,value in dict.items():
         at,bt = value[0],value[1]
+        
+        print(at,bt)
         if (begHold == 0):
             second = list(dict.values())[1]
             srtfdict[key] = [begHold-at, bt-second[0]-at]
@@ -61,20 +66,43 @@ def srtf(dict):
             pLine.append([key,endHold+1])
             begHold += bt
     return srtfdict, pLine
+
 def printData(gData, cData, pLine, Name):
-    avgWT,avgTT =0,0
+    sumWT,sumTT =0,0
     plinestr= "0 -> "
     print(Name.upper())
-    print('| PROCESS | ARRIVAL | BURST | WAIT |')
+    
+    # This block prints data in an organized shape
+    #print('| PROCESS | ARRIVAL | BURST | WAIT | TURNAROUND')
     for key,value in sorted(cData.items()):
-        print('{:>4}{:>10}{:>10}{:>10}'.format(key,gData[key][0],gData[key][1],value[0]))
-        avgWT += value[0]
-        avgTT += value[1]
-    print('Average Wait Time = {}'.format(avgWT/len(cData)))
+        #print('{:>4}{:>10}{:>10}{:>10}'.format(key,gData[key][0],gData[key][1],value[0]))
+        
+        # This block prints data in order (use either blocks not both)
+        #process data
+        print('Process ID:',key)
+        print('Arrival time:',gData[key][0])
+        print('Burst time:',gData[key][1])
+        print('waiting time: ',value[0])
+        print('Turnaround time: ',value[1])
+        
+        #sum of waiting time, turnaround time
+        sumWT += value[0]
+        sumTT += value[1]
+        
+        #average waiting time
+        avgwait= sumWT/len(cData)
+       
+        #average turnaround time
+        avgturnaround=sumTT/len(cData)
+        
+    print('Average Wait Time = ',avgwait)
+    print('Average Turnaround Time = ',avgturnaround)
+    
+    # Line similar to gantt chart
     for x in pLine:
         plinestr += ('{} -> {} -> '.format(x[0],x[1]))
     print('{}\n'.format(plinestr[:-3]))
 
-
+    
 
 
