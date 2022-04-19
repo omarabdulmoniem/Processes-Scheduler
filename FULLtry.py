@@ -750,6 +750,50 @@ def sjfnon_window():
     
 # Round Robin Algorithm
 
+def rrgannt_chart():
+    # Declaring a figure "gnt"
+    fig, gnt = plt.subplots()
+    
+    # Setting Y-axis limits
+    gnt.set_ylim(0, 20+10*len(info_list))
+    
+    # Setting X-axis limits
+    gnt.set_xlim(0, 20+3*len(info_list))
+    
+    # Setting labels for x-axis and y-axis
+    gnt.set_xlabel('Seconds')
+    gnt.set_ylabel('Processes')
+    
+    # Setting ticks on y-axis
+    ticks = []
+    for i in range(int(num0.get())):
+        ticks.append(15+10*i)
+    gnt.set_yticks(ticks)
+
+    # Labelling tickes of y-axis
+    tick_labels = []
+    for i in range(int(num0.get())):
+        tick_labels.append('P'+str(i+1))
+    gnt.set_yticklabels(tick_labels)
+    
+    # Setting graph attribute
+    gnt.grid(True)
+    
+    # Declaring a bar in schedule
+    wait_sum = 0
+    qua = int(quantumm.get())
+    for i in range(int(num0.get())):
+        startlist = []
+        for j in range(len(executed_process)):
+            starttime=0
+            if int(executed_process[j])==i:
+                for z in range(j):
+                    starttime += int(extime[z])
+                startlist.append((starttime,int(extime[j])))
+
+        gnt.broken_barh(startlist, (ticks[i]-5, 10),facecolors =(colors[i]))
+    
+    plt.show()
 
 class RoundRobin:
     
@@ -757,7 +801,10 @@ class RoundRobin:
         
         process_data = []
         ready_queue = []
+        global executed_process
         executed_process = []
+        global extime
+        extime = []
         time = 0
         start_time = []
         exit_time = []
@@ -834,6 +881,7 @@ class RoundRobin:
                     exit_time.append(e_time)
                         
                     executed_process.append(ready_queue[0][0])
+                    extime.append(quantum)
                     for j in range(len(process_data)):
                         if process_data[j][0] == ready_queue[0][0]:
                             break
@@ -850,6 +898,7 @@ class RoundRobin:
                     exit_time.append(e_time)
                         
                     executed_process.append(ready_queue[0][0])
+                    extime.append(ready_queue[0][2])
                     for j in range(len(process_data)):
                         if process_data[j][0] == ready_queue[0][0]:
                             break
@@ -873,6 +922,7 @@ class RoundRobin:
                     exit_time.append(e_time)
                         
                     executed_process.append(normal_queue[0][0])
+                    extime.append(quantum)
                     for j in range(len(process_data)):
                         if process_data[j][0] == normal_queue[0][0]:
                             break
@@ -887,6 +937,7 @@ class RoundRobin:
                     exit_time.append(e_time)
                         
                     executed_process.append(normal_queue[0][0])
+                    extime.append(normal_queue[0][2])
                     for j in range(len(process_data)):
                         if process_data[j][0] == normal_queue[0][0]:
                             break
@@ -940,7 +991,7 @@ class RoundRobin:
 
             turnrr_label.config(text = 'average turn around time is: '+ str(turn_time), bg= '#772020',fg='white',font=('Arial', 14))
             turnrr_label.grid(row=int(num0.get())+5,column=2,padx=10,pady=10)
-
+            rrgannt_chart()
 
 
 
