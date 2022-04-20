@@ -14,7 +14,8 @@ wel_label.pack(padx=10,pady=10)
 colors = ['tab:red', 'tab:green', 'tab:blue', 'purple', 'black', 'orange', 'gray', 'pink', 'yellow', 'navy','violet', 'maroon']
 
 class process_ins:
-    def __init__(self,burstTime,arrival_time=0,priority=1):
+    def __init__(self,id,burstTime,arrival_time=0,priority=1):
+        self.id = id
         self.burstTime = burstTime
         self.arrival_time = arrival_time
         self.priority = priority
@@ -81,8 +82,12 @@ def gannt_chart():
 
     # Labelling tickes of y-axis
     tick_labels = []
+    #ra = int(number)
+    #while ra != 0:
+    #    tick_labels.append('P'+str(ra))
+    #    ra-=1
     for i in range(int(number)):
-        tick_labels.append('P'+str(i+1))
+        tick_labels.append('P'+str(processes[i].id))
     gnt.set_yticklabels(tick_labels)
     
     # Setting graph attribute
@@ -105,10 +110,13 @@ def fcfs():
     global number
     number = int(num0.get())
     duration = 0
-    for single in info_list:
-            process = process_ins(int(single[0].get()),int(single[1].get()))
-            processes.append(process)
-            duration += int(single[0].get())
+    y=1
+    for single in info_list:    
+        process = process_ins(y,int(single[0].get()),int(single[1].get()))
+        processes.append(process)
+        duration += int(single[0].get())
+        y+=1
+
 
     processes.sort()
     startseq = []
@@ -151,7 +159,7 @@ def fcfs_window():
         info_list[y].append(arrival)
 
 
-    process_button = Button(new,text="Process",padx=10,pady=10,fg='black',command= fcfs)
+    process_button = Button(new,text="Process",padx=10,pady=10,fg='#772020',command= fcfs)
     process_button.grid(row=int(num0.get()),column=1)
 
     exit_button = Button(new,text="Exit",padx=10,pady=10,fg='red',command= new.quit)
@@ -194,23 +202,6 @@ def pgannt_chart():
     # Setting graph attribute
     gnt.grid(True)
     
-    # Declaring a bar in schedule
-    
-
-    #wait_sum = 0
-    #qua = int(quantumm.get())
-    #for i in range(int(num0.get())):
-    #    startlist = []
-    #    for j in range(len(executed_process)):
-    #        starttime=0
-    #       if int(executed_process[j])==i:
-    #            for z in range(j):
-    #                starttime += int(extime[z])
-    #            startlist.append((starttime,int(extime[j])))
-    #
-    #    gnt.broken_barh(startlist, (ticks[i]-5, 10),facecolors =(colors[i]))
-
-
     for i in range(int(num0.get())):
         startlist = []
         for j in range(len(pseq)):
@@ -605,6 +596,60 @@ def prioritynon_window():
 
 # SJF preemetive Algorithm
 
+def sjfpgannt_chart():
+    # Declaring a figure "gnt"
+    fig, gnt = plt.subplots()
+    
+    # Setting Y-axis limits
+    gnt.set_ylim(0, 20+10*len(info_list))
+    
+    # Setting X-axis limits
+    gnt.set_xlim(0, 20+3*len(info_list))
+    
+    # Setting labels for x-axis and y-axis
+    gnt.set_xlabel('Seconds')
+    gnt.set_ylabel('Processes')
+    
+    # Setting ticks on y-axis
+    ticks = []
+    for i in range(int(num0.get())):
+        ticks.append(15+10*i)
+    gnt.set_yticks(ticks)
+
+    # Labelling tickes of y-axis
+    tick_labels = []
+    for i in range(int(num0.get())):
+        tick_labels.append('P'+str(i+1))
+    gnt.set_yticklabels(tick_labels)
+    
+    # Setting graph attribute
+    gnt.grid(True)
+    
+    for i in range(int(num0.get())):
+        startlist = []
+        for j in range(len(sjfseq)):
+            starttime=0
+            duration = 0
+            z=j
+            while int(sjfseq[z]) == i:    
+                z+=1
+                if z == len(sjfseq):
+                    break
+
+            z-=1
+            if j == 0:
+                duration = int(esjf[z])
+            else:
+                duration = int(esjf[z])-int(esjf[j-1])
+
+            if int(sjfseq[j])==i:
+                starttime=int(esjf[j])-1
+                startlist.append((starttime,duration))
+
+        gnt.broken_barh(startlist, (ticks[i]-5, 10),facecolors =(colors[i]))
+    
+    plt.show()
+
 
 class SJF:
 
@@ -678,6 +723,11 @@ class SJF:
                     process_data[k].append(e_time)
         t_time = SJF.calculateTurnaroundTime(self, process_data)
         w_time = SJF.calculateWaitingTime(self, process_data)
+        global sjfseq
+        sjfseq  = sequence_of_process
+        global esjf
+        esjf = exit_time
+
         SJF.printData(self, process_data, t_time, w_time, sequence_of_process)
         
         
@@ -712,6 +762,7 @@ class SJF:
 
         turnsjf_label.config(text = 'average turn around time is: '+ str(average_turnaround_time), bg= '#772020',fg='white',font=('Arial', 14))
         turnsjf_label.grid(row=int(num0.get())+4,column=2,padx=10,pady=10)
+        sjfpgannt_chart()
         
             
 
@@ -768,29 +819,75 @@ def sjfpre_window():
 
 # SJF Non preemetive Algorithm
 
+def sjfnongannt_chart():
+    # Declaring a figure "gnt"
+    fig, gnt = plt.subplots()
+    
+    # Setting Y-axis limits
+    gnt.set_ylim(0, 20+10*len(info_list))
+    
+    # Setting X-axis limits
+    gnt.set_xlim(0, 20+3*len(info_list))
+    
+    # Setting labels for x-axis and y-axis
+    gnt.set_xlabel('Seconds')
+    gnt.set_ylabel('Processes')
+    
+    # Setting ticks on y-axis
+    ticks = []
+    for i in range(int(num0.get())):
+        ticks.append(15+10*i)
+    gnt.set_yticks(ticks)
+
+    # Labelling tickes of y-axis
+    tick_labels = []
+    for i in range(int(num0.get())):
+        tick_labels.append('P'+str(i+1))
+    gnt.set_yticklabels(tick_labels)
+    
+    # Setting graph attribute
+    gnt.grid(True)
+    
+    # Declaring a bar in schedule
+    wait_sum = 0
+
+    for i in range(int(num0.get())):
+        index = int(sqnon[i])-1
+        bur = burrlist[index]
+        gnt.broken_barh([(wait_sum, bur)], (ticks[index]-5, 10),facecolors =(colors[i]))
+        wait_sum = wait_sum + bur
+    
+    plt.show()
 
 
 class NONPSJF:
     
     def processData(self, no_of_processes):
         process_data = []
+        global burrlist
+        burrlist = []
+        y=0
         for i in info_list:
               temp = []
-              processID = 'P'+str(i)
+              processID = y
               arrivalTime = int(i[1].get())
               
               burstTime = int(i[0].get())
               temp.extend([processID, arrivalTime, burstTime, 0, burstTime])
               process_data.append(temp)
+              burrlist.append(burstTime)
+              y+=1
         NONPSJF.schedulingProcess(self, process_data)
         
     def schedulingProcess(self, process_data):
         start_time = []
         exit_time = []
+        sequence_of_process = []
+        global seko
+        seko =[]
         s_time = 0
-	global sequence_of_process
-	sequence_of_process = []
         process_data.sort(key=lambda x: x[1])
+
         for i in range(len(process_data)):
             ready_queue = []
             temp = []
@@ -813,7 +910,7 @@ class NONPSJF:
                 s_time = s_time + ready_queue[0][2]
                 e_time = s_time
                 exit_time.append(e_time)
-		sequence_of_process.append(ready_queue[0][0])
+                sequence_of_process.append(ready_queue[0][0])
                 for k in range(len(process_data)):
                     if process_data[k][0] == ready_queue[0][0]:
                         break
@@ -827,7 +924,7 @@ class NONPSJF:
                 s_time = s_time + normal_queue[0][2]
                 e_time = s_time
                 exit_time.append(e_time)
-		sequence_of_process.append(ready_queue[0][0])
+                sequence_of_process.append(ready_queue[0][0])
                 for k in range(len(process_data)):
                     if process_data[k][0] == normal_queue[0][0]:
                         break
@@ -836,7 +933,9 @@ class NONPSJF:
         
         t_time = NONPSJF.calculateTurnaroundTime(self, process_data)
         w_time = NONPSJF.calculateWaitingTime(self, process_data)
-        NONPSJF.printData(self, process_data, t_time, w_time, sequence_of_process)
+        global sqnon
+        sqnon = sequence_of_process
+        NONPSJF.printData(self, process_data, t_time, w_time)
         
     
     def calculateTurnaroundTime(self, process_data):
@@ -862,12 +961,13 @@ class NONPSJF:
         
         return average_waiting_time    
     
-    def printData(self, process_data, average_turnaround_time, average_waiting_time, sequence_of_process):
+    def printData(self, process_data, average_turnaround_time, average_waiting_time):
         waitsjfnon_label.config(text = 'average wait time is: '+ str(average_waiting_time), bg= '#772020',fg='white',font=('Arial', 14))
         waitsjfnon_label.grid(row=int(num0.get())+3,column=2,padx=10,pady=10)
 
         turnsjfnon_label.config(text = 'average turn around time is: '+ str(average_turnaround_time), bg= '#772020',fg='white',font=('Arial', 14))
         turnsjfnon_label.grid(row=int(num0.get())+4,column=2,padx=10,pady=10)
+        sjfnongannt_chart()
         
         
 def nonpsjf():
@@ -1222,12 +1322,6 @@ def rr_window():
 
     global turnrr_label
     turnrr_label = Label(new,text='')
-
-
-
-
-
-
 
 
 
