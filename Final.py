@@ -125,7 +125,7 @@ def gannt_chart():
 
     for i in range(number):
         gnt.broken_barh([(wait_sum, processes[i].burstTime)], (ticks[i]-5, 10),facecolors =(colors[i]))
-        wait_sum = wait_sum + int(processes[i].burstTime)
+        wait_sum = wait_sum + float(processes[i].burstTime)
     
     plt.show()
         
@@ -139,9 +139,9 @@ def fcfs():
     duration = 0
     y=1
     for single in info_list:    
-        process = process_ins(y,int(single[0].get()),int(single[1].get()))
+        process = process_ins(y,float(single[0].get()),float(single[1].get()))
         processes.append(process)
-        duration += int(single[0].get())
+        duration += float(single[0].get())
         y+=1
 
 
@@ -149,9 +149,9 @@ def fcfs():
     startseq = []
     wait_sum = 0
     for i in range(0,int(number)-1):
-        wait_sum = wait_sum + int(processes[i].burstTime) + timer
+        wait_sum = wait_sum + float(processes[i].burstTime) + timer
         startseq.append(wait_sum)
-        timer = timer + int(processes[i].burstTime)
+        timer = timer + float(processes[i].burstTime)
     
     av_wait = wait_sum/int(number)
 
@@ -166,13 +166,13 @@ def fcfs():
     seq_label1.config(text = ff , bg= '#772020',fg='white',font=('Arial', 14))
     seq_label1.grid(row=number+7,column=2)
 
-    index = int(processes[0].arrival_time)
+    index = float(processes[0].arrival_time)
 
     nu =' '+ str(index)
-    time = int(processes[0].arrival_time)
+    time = float(processes[0].arrival_time)
     for i in range(len(processes)):
         nu += '         ' + str(time + processes[i].burstTime)
-        time += int(processes[i].burstTime)
+        time += float(processes[i].burstTime)
 
     fcnum_label.config(text = nu , bg= '#772020',fg='white',font=('Arial', 11))
     fcnum_label.grid(row=int(num0.get())+9,column=2)
@@ -182,7 +182,7 @@ def fcfs():
 
 def fcfs_window():
     new = Toplevel()
-    new.title('FCFS INFO')
+    new.title('FCFS')
     new.geometry("1000x600")
     new.config(bg= '#772020')
 
@@ -268,12 +268,12 @@ def pgannt_chart():
 
             z-=1
             if j == 0:
-                duration = int(eetime[z])-1
+                duration = float(eetime[z])-1
             else:
-                duration = int(eetime[z])-int(eetime[j-1])
+                duration = float(eetime[z])-float(eetime[j-1])
 
             if int(pseq[j])==i:
-                starttime=int(eetime[j])-1
+                starttime=float(eetime[j])-1
                 startlist.append((starttime,duration))
 
         gnt.broken_barh(startlist, (ticks[i]-5, 10),facecolors =(colors[i]))
@@ -290,9 +290,9 @@ class Priority_preemptive:
         for i in info_list:
             temp = []
             processID = y
-            arrivalTime = int(i[1].get())
+            arrivalTime = float(i[1].get())
             priority = int(i[2].get())
-            burstTime = int(i[0].get())
+            burstTime = float(i[0].get())
             temp.extend([processID, arrivalTime, burstTime, priority, 0, burstTime])
             processData.append(temp)
             y+=1
@@ -403,7 +403,7 @@ class Priority_preemptive:
         seq_label.config(text = ff , bg= '#772020',fg='white',font=('Arial', 14))
         seq_label.grid(row=int(num0.get())+7,column=2)
 
-        index = int(info_list[int(pseq[0])][1].get())
+        index = float(info_list[int(pseq[0])][1].get())
 
         nu =' '+ str(index)
 
@@ -411,7 +411,7 @@ class Priority_preemptive:
             if i != len(pseq)-1 and pseq[i] == pseq[i+1]:
                 continue
             else:
-                nu += '          ' + str(int(eetime[i]))
+                nu += '          ' + str(float(eetime[i]))
         
         ppnum_label.config(text = nu , bg= '#772020',fg='white',font=('Arial', 11))
         ppnum_label.grid(row=int(num0.get())+9,column=2)
@@ -593,9 +593,9 @@ class Priority_non_preemptive:
         for i in info_list:
             temp = []
             processID = y
-            arrivalTime = int(i[1].get())
+            arrivalTime = float(i[1].get())
             priority = int(i[2].get())
-            burstTime = int(i[0].get())
+            burstTime = float(i[0].get())
             temp.extend([processID, arrivalTime, burstTime, priority,0])
             processData.append(temp)
             burlist.append(burstTime)
@@ -693,14 +693,14 @@ class Priority_non_preemptive:
 
 
 
-        index = int(info_list[int(sq[0])][1].get())
+        index = float(info_list[int(sq[0])][1].get())
         nu =' '+ str(index)
 
         for i in range(len(sq)):
             if i != len(sq)-1 and sq[i] == sq[i+1]:
                 continue
             else:
-                nu += '          ' + str(int(nonexit[i]))
+                nu += '          ' + str(float(nonexit[i]))
         
         pnonnum_label.config(text = nu , bg= '#772020',fg='white',font=('Arial', 11))
         pnonnum_label.grid(row=int(num0.get())+9,column=2)
@@ -806,8 +806,8 @@ def sjfpgannt_chart():
     for i in range(int(num0.get())):
         startlist = []
         for j in range(len(sjfseq)):
-            starttime=0
-            duration = 0
+            starttime=0.0
+            duration = 0.0
             z=j
             while int(sjfseq[z]) == i:    
                 z+=1
@@ -816,12 +816,12 @@ def sjfpgannt_chart():
 
             z-=1
             if j == 0:
-                duration = int(esjf[z])
+                duration = float(esjf[z])
             else:
-                duration = int(esjf[z])-int(esjf[j-1])
+                duration = float(esjf[z])-float(esjf[j-1])
 
             if int(sjfseq[j])==i:
-                starttime=int(esjf[j])-1
+                starttime=float(esjf[j])-1
                 startlist.append((starttime,duration))
 
         gnt.broken_barh(startlist, (ticks[i]-5, 10),facecolors =(colors[i]))
@@ -837,9 +837,9 @@ class SJF:
       for i in info_list:
             temp = []
             processID = y
-            arrivalTime = int(i[1].get())
+            arrivalTime = float(i[1].get())
             
-            burstTime = int(i[0].get())
+            burstTime = float(i[0].get())
             temp.extend([processID, arrivalTime, burstTime, 0, burstTime])
             process_data.append(temp)
             y+=1
@@ -951,14 +951,14 @@ class SJF:
         seqsjf_label.grid(row=int(num0.get())+7,column=2)
 
 
-        index = int(info_list[int(sequence_of_process[0])][1].get())
+        index = float(info_list[int(sequence_of_process[0])][1].get())
         nu =' '+ str(index)
 
         for i in range(len(sequence_of_process)):
             if i != len(sequence_of_process)-1 and sequence_of_process[i] == sequence_of_process[i+1]:
                 continue
             else:
-                nu += '          ' + str(int(esjf[i]))
+                nu += '          ' + str(float(esjf[i]))
         
         psjfnum_label.config(text = nu , bg= '#772020',fg='white',font=('Arial', 11))
         psjfnum_label.grid(row=int(num0.get())+9,column=2)
@@ -979,7 +979,7 @@ def psjf():
 def sjfpre_window():
 
     new = Toplevel()
-    new.title('INFO')
+    new.title('SJF (Preemative)')
     new.geometry("1000x600")
     new.config(bg= '#772020')
 
@@ -1078,9 +1078,9 @@ class NONPSJF:
         for i in info_list:
               temp = []
               processID = y
-              arrivalTime = int(i[1].get())
+              arrivalTime = float(i[1].get())
               
-              burstTime = int(i[0].get())
+              burstTime = float(i[0].get())
               temp.extend([processID, arrivalTime, burstTime, 0, burstTime])
               process_data.append(temp)
               burrlist.append(burstTime)
@@ -1188,14 +1188,14 @@ class NONPSJF:
         seqsjfnon_label.grid(row=int(num0.get())+7,column=2)
 
 
-        index = int(info_list[int(sqnon[0])][1].get())
+        index = float(info_list[int(sqnon[0])][1].get())
         nu =' '+ str(index)
 
         for i in range(len(sqnon)):
             if i != len(sqnon)-1 and sqnon[i] == sqnon[i+1]:
                 continue
             else:
-                nu += '          ' + str(int(ee[i]))
+                nu += '          ' + str(float(ee[i]))
         
         sjfnum_label.config(text = nu , bg= '#772020',fg='white',font=('Arial', 11))
         sjfnum_label.grid(row=int(num0.get())+9,column=2)
@@ -1217,7 +1217,7 @@ def nonpsjf():
 
 def sjfnon_window():
     new = Toplevel()
-    new.title('sjf non preemative INFO')
+    new.title('sjf (Non preemative)')
     new.geometry("1200x600")
     new.config(bg= '#772020')
 
@@ -1303,8 +1303,8 @@ def rrgannt_chart():
             starttime=0
             if int(executed_process[j])==i:
                 for z in range(j):
-                    starttime += int(extime[z])
-                startlist.append((starttime,int(extime[j])))
+                    starttime += float(extime[z])
+                startlist.append((starttime,float(extime[j])))
 
         gnt.broken_barh(startlist, (ticks[i]-5, 10),facecolors =(colors[i]))
     
@@ -1515,25 +1515,25 @@ class RoundRobin:
             sqq_label.grid(row=int(num0.get())+7,column=1)
 
 
-            index = int(info_list[int(executed_process[0])][1].get())
+            index = float(info_list[int(executed_process[0])][1].get())
             nu =''+ str(index)
-            time = int(info_list[int(executed_process[0])][1].get())
+            time = float(info_list[int(executed_process[0])][1].get())
             for i in range(len(executed_process)):
                 #nu += '         ' + str(time + int(extime[i]))
 
                 if int(quantumm.get()) <= 4 and int(quantumm.get()) > 2:
-                    nu += '         ' + str(time + int(extime[i]))
+                    nu += '         ' + str(time + float(extime[i]))
                 elif int(quantumm.get()) <= 2:
-                    nu += '          ' + str(time + int(extime[i]))
+                    nu += '          ' + str(time + float(extime[i]))
                 elif int(quantumm.get()) > 4 and int(quantumm.get()) <= 6 :
-                    nu += '         ' + str(time + int(extime[i]))
+                    nu += '         ' + str(time + float(extime[i]))
                 elif int(quantumm.get()) > 6:
-                    nu += '         ' + str(time + int(extime[i]))
+                    nu += '         ' + str(time + float(extime[i]))
 
                 #for i in range(int(quantumm.get())):
                 #    nu+= '   '
                 #nu += str(time + int(extime[i]))
-                time += int(extime[i])
+                time += float(extime[i])
 
             sqqnum_label.config(text = nu , bg= '#772020',fg='white',font=('Arial', 11))
             sqqnum_label.grid(row=int(num0.get())+9,column=1)
