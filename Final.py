@@ -411,7 +411,11 @@ class Priority_preemptive:
         seq_label.config(text = ff , bg= '#772020',fg='white',font=('Arial', 14))
         seq_label.grid(row=int(num0.get())+7,column=2)
 
-        index = int(info_list[int(pseq[0])][1].get())
+
+        if float(info_list[int(pseq[0])][1].get()) - int(info_list[int(pseq[0])][1].get()) != 0:
+            index = float(info_list[int(pseq[0])][1].get())
+        else:
+            index = int(info_list[int(pseq[0])][1].get())
 
         nu =' '+ str(index)
 
@@ -419,7 +423,10 @@ class Priority_preemptive:
             if i != len(pseq)-1 and pseq[i] == pseq[i+1]:
                 continue
             else:
-                nu += '          ' + str(int(eetime[i]))
+                if float(eetime[i]) - int(eetime[i]) != 0:
+                    nu += '          ' + str(float(eetime[i]))
+                else:
+                    nu += '          ' + str(int(eetime[i]))
         
         ppnum_label.config(text = nu , bg= '#772020',fg='white',font=('Arial', 11))
         ppnum_label.grid(row=int(num0.get())+9,column=2)
@@ -711,7 +718,7 @@ class Priority_non_preemptive:
             if i != len(sq)-1 and sq[i] == sq[i+1]:
                 continue
             else:
-                if nonexit[i] - int(nonexit[i]) != 0:
+                if float(nonexit[i]) - int(nonexit[i]) != 0:
                     nu += '          ' + str(round(float(nonexit[i])-1,2))
                 else:
                     nu += '          ' + str(int(nonexit[i])-1)
@@ -964,15 +971,20 @@ class SJF:
         seqsjf_label.config(text = ff , bg= '#772020',fg='white',font=('Arial', 14))
         seqsjf_label.grid(row=int(num0.get())+7,column=2)
 
-
-        index = int(info_list[int(sequence_of_process[0])][1].get())
+        if int(info_list[int(sequence_of_process[0])][1].get()) - float(info_list[int(sequence_of_process[0])][1].get()) != 0:
+            index = float(info_list[int(sequence_of_process[0])][1].get())
+        else:
+            index = int(info_list[int(sequence_of_process[0])][1].get())
         nu =' '+ str(index)
 
         for i in range(len(sequence_of_process)):
             if i != len(sequence_of_process)-1 and sequence_of_process[i] == sequence_of_process[i+1]:
                 continue
             else:
-                nu += '          ' + str(int(esjf[i]))
+                if float(esjf[i]) - int(esjf[i]) != 0:
+                    nu += '          ' + str(float(esjf[i]))
+                else:
+                    nu += '          ' + str(int(esjf[i]))
         
         psjfnum_label.config(text = nu , bg= '#772020',fg='white',font=('Arial', 11))
         psjfnum_label.grid(row=int(num0.get())+9,column=2)
