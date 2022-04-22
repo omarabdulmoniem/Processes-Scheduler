@@ -1534,17 +1534,17 @@ class RoundRobin:
 
     def printrr(self,turn_time,wait_time):
             waitrr_label.config(text = 'Average wait time is: '+ str(round(wait_time,2))+' ms', bg= '#772020',fg='white',font=('Arial', 14))
-            waitrr_label.grid(row=int(num0.get())+4,column=1,padx=10,pady=10)
+            waitrr_label.grid(row=int(num0.get())+4,column=2,padx=10,pady=10)
 
             turnrr_label.config(text = 'Average turn around time is: '+ str(round(turn_time,2))+' ms', bg= '#772020',fg='white',font=('Arial', 14))
-            turnrr_label.grid(row=int(num0.get())+5,column=1,padx=10,pady=10)
+            turnrr_label.grid(row=int(num0.get())+5,column=2,padx=10,pady=10)
 
             ff = '|'
             for i in range(len(executed_process)):
                 ff += '  ' + 'P' + str(int(executed_process[i]+1)) + '  |'
 
             sqq_label.config(text = ff , bg= '#772020',fg='white',font=('Arial', 14))
-            sqq_label.grid(row=int(num0.get())+7,column=1)
+            sqq_label.grid(row=int(num0.get())+7,column=2)
 
             if float(info_list[int(executed_process[0])][1].get()) - int(info_list[int(executed_process[0])][1].get()) != 0:
                 index = float(info_list[int(executed_process[0])][1].get())
@@ -1562,22 +1562,22 @@ class RoundRobin:
 
                 if int(quantumm.get()) <= 4 and int(quantumm.get()) > 2:
                     if float(time + float(extime[i])) - int(time + float(extime[i])) != 0:
-                        nu += '         ' + str(time + float(extime[i]))
+                        nu += '         ' + str(round(time + float(extime[i]),2))
                     else:
                         nu += '         ' + str(int(time + float(extime[i])))
                 elif int(quantumm.get()) <= 2:
                     if float(time + float(extime[i])) - int(time + float(extime[i])) != 0:
-                        nu += '          ' + str(time + float(extime[i]))
+                        nu += '          ' + str(round(time + float(extime[i]),2))
                     else:
                         nu += '          ' + str(int(time + float(extime[i])))
                 elif int(quantumm.get()) > 4 and int(quantumm.get()) <= 6 :
                     if float(time + float(extime[i])) - int(time + float(extime[i])) != 0:
-                        nu += '         ' + str(time + float(extime[i]))
+                        nu += '         ' + str(round(time + float(extime[i]),2))
                     else:
                         nu += '         ' + str(int(time + float(extime[i])))
                 elif int(quantumm.get()) > 6:
                     if float(time + float(extime[i])) - int(time + float(extime[i])) != 0:
-                        nu += '         ' + str(time + float(extime[i]))
+                        nu += '         ' + str(round(time + float(extime[i]),2))
                     else:
                         nu += '         ' + str(int(time + float(extime[i])))
 
@@ -1587,7 +1587,7 @@ class RoundRobin:
                 time += float(extime[i])
 
             sqqnum_label.config(text = nu , bg= '#772020',fg='white',font=('Arial', 11))
-            sqqnum_label.grid(row=int(num0.get())+9,column=1)
+            sqqnum_label.grid(row=int(num0.get())+9,column=2)
 
             rrgannt_chart()
 
@@ -1603,7 +1603,7 @@ def rrr():
 def rr_window():
     new = Toplevel()
     new.title('Round Robin')
-    new.geometry("800x600")
+    new.geometry("1000x600")
     new.config(bg= '#772020')
 
     #processes info
